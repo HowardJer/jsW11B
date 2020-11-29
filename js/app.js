@@ -1,18 +1,36 @@
-// creating a new request object
-let ajax = new XMLHttpRequest();
+// target to <p> tag to fill in
+let target = document.querySelector('.quote');
 
-// define our ajax callback function 
-//(ie. what happens when we send() the request)
+// select the button and attach an event listener to it
+let button = document.querySelector('.get-quote');
+button.addEventListener('click', function() {
+    
+    // create a new XMLHttpRequest object
+    let ajax = new XMLHttpRequest();
 
-ajax.onreadystatechange = function() {
-    // was the request completed successfully?
-    if(this.readyState == 4 && this.status == 200) {
-        console.log(this.responseText);
+    // define what happens when the ajax request is performed
+    ajax.onreadystatechange = function() {
+        
+        // if the request is successful
+        if(this.readyState == 4 && this.status == 200) {
+            
+            // Parse the JSON string response in to a usable JS object
+            let text = JSON.parse(this.responseText);
+            console.log(this.responseText)
+            
+            // Set the <p>'s innerHTML
+            target.innerHTML = text.quote;
+            
+        } 
     }
-}
 
-// preparing our request
-ajax.open("GET", "https://api.kanye.rest", true);
+    // define where and how to make your ajax request
+     
+    ajax.open("GET", "https://api.kanye.rest", true);   // args: request type, api url, asynchronous?
+    
+    // trigger the ajax request (changes readyState)
+    ajax.send();
+});
 
-// send ajax request
-ajax.send();
+// trigger a button click when the page loads, to automatically load a quote
+button.click();
